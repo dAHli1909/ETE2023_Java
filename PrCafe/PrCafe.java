@@ -1,12 +1,11 @@
-package ETE2023_Java;
-
-/**:
+package ETE2023_Java.PrCafe;
+/* 
 *@Programa: PrCafe.java
 *Autor:    Baca López Daniel Salvador 
 *Fecha:    06/11/2023
 *Descripcion: Cafetería 
 *
-***/
+*/
 
 import java.awt.*;
 import java.awt.event.*;
@@ -47,7 +46,7 @@ public class PrCafe extends JFrame implements ActionListener{
         demo.crearGUI();
         demo.setTitle("Acomodar controles y panels");
         demo.setVisible(true);
-        SwingUtilities.invokeLater(() -> new CapasVentana());
+        
     }
 
 }
