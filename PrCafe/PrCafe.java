@@ -18,7 +18,9 @@ public class PrCafe extends JFrame implements ActionListener{
 	Color café3 = new Color (0x664914);
 	Color café4 = new Color (0x382400);
 
-	private ImageIcon imgAme = new ImageIcon("imgAme.jpg");
+	
+
+	
 	
 	JPanel panelT = crearPanel(café4,0,0,1500,102,0);
 	JPanel panelST = crearPanel(café3, 0, 102, 1500, 100, 0);
@@ -54,14 +56,17 @@ public class PrCafe extends JFrame implements ActionListener{
         panelP.add(new JButton("Button 2"));
         panelP.add(new JButton("Button 3"));
         panelP.add(new JButton("Button 4"));
-
+		ImageIcon imgAme = new ImageIcon("/home/daniel/Documents/Pr/ETE2023_Java/PrCafe/imgAme.jpg");
+	Image AmeImage = imgAme.getImage();
+	JLabel AmeImageLabel = new JLabel();
+	AmeImageLabel.setIcon(imgAme);
 		
 		
 	}
 	public void actionPerformed(ActionEvent event) {
 
     	Object origen = event.getSource(); //permite trabajar con más de un botón
-		imgAme.paintIcon(this,panelP.getGraphics(), 100, 100);
+		//imgAme.paintIcon(this,panelP.getGraphics(), 100, 100);
 		panelT.getGraphics().fillRect(5,5,790,490);
 		//panelP.getGraphics().drawString();
 	}
