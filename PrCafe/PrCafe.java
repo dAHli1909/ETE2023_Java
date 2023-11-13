@@ -31,7 +31,7 @@ public class PrCafe extends JFrame implements ActionListener{
 	JButton botonAtras = new JButton("Atrás");
 	JButton botonSelect = new JButton("Seleccionar");
 	private ButtonGroup bgOpcionesLeche, bgOpcionesExtra;
-    private JRadioButton LecheSin, LecheEntera, LecheLight, LecheDeslactosada;
+    private JRadioButton LecheEntera, LecheLight, LecheDeslactosada, CremaBatida, ChispasChocolate, CremaChispas;
 
 	private JPanel crearPanel(Color color, int x, int y, int width, int height, int modificador) {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -168,12 +168,24 @@ public class PrCafe extends JFrame implements ActionListener{
 		}
 
 		if(identificador_inicial>20){
-			bgOpcionesLeche=new ButtonGroup();
-			radio1=new JRadioButton("Sumar");
-			radio1.setBounds(10,110,100,30);
-			bg.add(radio1); 
+			bgOpcionesLeche = new ButtonGroup("Leche");
+			LecheEntera = new JRadioButton("Leche entera");
+			LecheLight = new JRadioButton("Leche light"); 
+			LecheDeslactosada = new JRadioButton("Leche deslactosada");
+			bgOpcionesLeche.add(LecheEntera); 
+			bgOpcionesLeche.add(LecheLight); 
+			bgOpcionesLeche.add(LecheDeslactosada); 
+			opcionesPanel.add(bgOpcionesLeche);
+			bgOpcionesExtra = new ButtonGroup("Extras");
+			CremaBatida = new JRadioButton("Crema batida");
+			ChispasChocolate = new JRadioButton("Chispas de chocolate");
+			CremaChispas = new JRadioButton("Ambas");
+			bgOpcionesExtra.add(CremaBatida);
+			bgOpcionesExtra.add(ChispasChocolate);
+			bgOpcionesExtra.add(CremaChispas);	
+			opcionesPanel.add(bgOpcionesExtra);
+		
 		}
-				
 
 
 		
