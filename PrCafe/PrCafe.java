@@ -19,21 +19,22 @@ public class PrCafe extends JFrame implements ActionListener{
 	Color café4 = new Color (0x382400);
 	Color negro = new Color (0x000000);
 
-	JPanel panelT = crearPanel(café4,0,0,1500,80,0);
-	JPanel panelST = crearPanel(café3, 0, 80, 1500, 50, 0);
-	JPanel panelP = crearPanel(café1, 0, 130, 750, 750, 0);
-	JPanel panelC = crearPanel(café2, 750, 130, 750, 500, 0);
-	JPanel panelCS = crearPanel(café3, 750,630, 750, 65, 1);
+	JPanel panelT = crearPanel(café4,0,0,1380,80,0);
+	JPanel panelST1 = crearPanel(café3, 0, 80, 690, 50, 0);
+	JPanel panelST2 = crearPanel(café3, 690, 80, 690, 50, 0);
+	JPanel panelP = crearPanel(café1, 0, 130, 690, 750, 0);
+	JPanel panelC = crearPanel(café2, 690, 130, 690, 400, 0);
+	JPanel panelCS = crearPanel(café3, 690,530, 690, 165, 0);
 
 	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel;
 	JButton botonAdelante = new JButton("Adelante");
-	JButton botonAtrás = new JButton("Atrás");
+	JButton botonAtras = new JButton("Atrás");
 	JButton botonSelect = new JButton("Seleccionar");
 	private ButtonGroup bgOpcionesLeche, bgOpcionesExtra;
     private JRadioButton LecheSin, LecheEntera, LecheLight, LecheDeslactosada;
 
 	private JPanel crearPanel(Color color, int x, int y, int width, int height, int modificador) {
-		JPanel panel = new JPanel(new FlowLayout());
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         if(modificador==1){
 			panel = new JPanel(new GridLayout(1,2));
 		}
@@ -43,7 +44,7 @@ public class PrCafe extends JFrame implements ActionListener{
     }
 	private JPanel crearSubPanel(String archivo){
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20,12));
-		ImageIcon imgAme = new ImageIcon(new ImageIcon("./ETE2023_Java/PrCafe/img/"+archivo).getImage().getScaledInstance(170, 120, Image.SCALE_DEFAULT));
+		ImageIcon imgAme = new ImageIcon(new ImageIcon("./img/"+archivo).getImage().getScaledInstance(170, 120, Image.SCALE_DEFAULT));
 		JLabel AmeImageLabel = new JLabel();
 		AmeImageLabel.setIcon(imgAme);
 		panel.add(AmeImageLabel);
@@ -58,10 +59,18 @@ public class PrCafe extends JFrame implements ActionListener{
 		ventana.setSize(1500,900);
 		
 		ventana.add(panelT);
-		ventana.add(panelST);
+		ventana.add(panelST1);
+		ventana.add(panelST2);
 		ventana.add(panelP);
 		ventana.add(panelC);
 		ventana.add(panelCS);
+		
+		JLabel lblTitulo = new JLabel("Cafetería jiji");
+		panelT.add(lblTitulo);
+		JLabel lblProductos = new JLabel("Productos");
+		JLabel lblCompras = new JLabel("Compras");
+		panelST1.add(lblProductos);
+		panelST2.add(lblCompras);
 		
 		botonAme = new JButton("Americano"); 
 		botonAme.setPreferredSize(new Dimension(150,20));
@@ -119,13 +128,16 @@ public class PrCafe extends JFrame implements ActionListener{
 		panelP.add(panelPSubHel);
 		botonHel.addActionListener(this);
 
-		JPanel opcionesPanel = new JPanel(new FlowLayout());
-		opcionesPanel.add(panelCS);
-		JLabel opciones = new JLabel("Opciones");
-		opciones.add(opcionesPanel);
-		botonAdelante.add(opcionesPanel);
-		botonAtras.add(opcionesPanel);
-		botonSelect.add(opcionesPanel);
+		JPanel opcionesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20,12));
+		opcionesPanel.setBackground(null);
+		opcionesPanel.setPreferredSize(new Dimension(120,180));
+		panelCS.add(opcionesPanel);
+		JLabel lblopciones = new JLabel("Opciones");
+		opcionesPanel.add(lblopciones);
+		opcionesPanel.add(botonAdelante);
+		opcionesPanel.add(botonAtras);
+		opcionesPanel.add(botonSelect);
+
 		
 	}
 	@Override
