@@ -25,18 +25,20 @@ public class PrCafe extends JFrame implements ActionListener{
 	JPanel panelP = crearPanel(café1, 0, 130, 690, 750, 0);
 	JPanel panelC = crearPanel(café2, 690, 130, 690, 400, 0);
 	JPanel panelCS = crearPanel(café3, 690,530, 690, 165, 0);
+	JPanel opcionesPanel1, opcionesPanel2, opcionesPanel3, opcionesPanel4;
 
-	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel;
+	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel, pagar;
 	JButton botonAdelante = new JButton("Adelante");
 	JButton botonAtras = new JButton("Atrás");
-	JButton botonSelect = new JButton("Seleccionar");
+	JButton botonSelect = new JButton("Borrar");
 	private ButtonGroup bgOpcionesLeche, bgOpcionesExtra;
-    private JRadioButton LecheEntera, LecheLight, LecheDeslactosada, CremaBatida, ChispasChocolate, CremaChispas;
+    private JRadioButton LecheEntera, LecheLight, LecheDeslactosada, CremaBatida, ChispasChocolate, CremaChispas, Ninguna;
+	JTextField pago;
 
 	private JPanel crearPanel(Color color, int x, int y, int width, int height, int modificador) {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         if(modificador==1){
-			panel = new JPanel(new GridLayout(1,2));
+			panel = new JPanel(new GridLayout(2,3));
 		}
         panel.setBackground(color);
         panel.setBounds(x, y, width, height);
@@ -128,69 +130,213 @@ public class PrCafe extends JFrame implements ActionListener{
 		panelP.add(panelPSubHel);
 		botonHel.addActionListener(this);
 
-		JPanel opcionesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20,12));
-		opcionesPanel.setBackground(null);
-		opcionesPanel.setPreferredSize(new Dimension(120,180));
-		panelCS.add(opcionesPanel);
-		JLabel lblopciones = new JLabel("Opciones");
-		opcionesPanel.add(lblopciones);
-		opcionesPanel.add(botonAdelante);
-		opcionesPanel.add(botonAtras);
-		opcionesPanel.add(botonSelect);
+		opcionesPanel1 = crearSubPanel("");
+		panelCS.add(opcionesPanel1);
+		JLabel lblopciones = new JLabel("Opciones:");
+		opcionesPanel1.add(lblopciones);
+		opcionesPanel1.add(botonAdelante);
+		opcionesPanel1.add(botonAtras);
+		opcionesPanel1.add(botonSelect);
+		botonAdelante.addActionListener((this));
+		botonSelect.addActionListener((this));
+		botonAtras.addActionListener((this));
 
+		opcionesPanel2 = crearSubPanel("");
+		panelCS.add(opcionesPanel2);
+		JLabel lblLeche = new JLabel("Leche:");
+		opcionesPanel2.add(lblLeche);
+		bgOpcionesLeche = new ButtonGroup();
+		LecheEntera = new JRadioButton("Leche entera");
+		LecheLight = new JRadioButton("Leche light"); 
+		LecheDeslactosada = new JRadioButton("Leche deslactosada");
+		bgOpcionesLeche.add(LecheEntera); 
+		bgOpcionesLeche.add(LecheLight); 
+		bgOpcionesLeche.add(LecheDeslactosada); 
+		opcionesPanel2.add(LecheEntera);
+		opcionesPanel2.add(LecheLight);
+		opcionesPanel2.add(LecheDeslactosada);
+		LecheEntera.setSelected(true);
+		LecheEntera.addActionListener(this);
+		LecheDeslactosada.addActionListener(this);
+		LecheLight.addActionListener(this);
+
+		opcionesPanel3 = crearSubPanel("");
+		panelCS.add(opcionesPanel3);
+		JLabel lblExtras = new JLabel("Extras");
+		opcionesPanel3.add(lblExtras);
+		bgOpcionesExtra = new ButtonGroup();
+		CremaBatida = new JRadioButton("Crema batida");
+		ChispasChocolate = new JRadioButton("Chispas de chocolate");
+		CremaChispas = new JRadioButton("Ambas");
+		Ninguna = new JRadioButton("Ninguna");
+		bgOpcionesExtra.add(CremaBatida);
+		bgOpcionesExtra.add(ChispasChocolate);
+		bgOpcionesExtra.add(CremaChispas);
+		bgOpcionesExtra.add(Ninguna);
+		opcionesPanel3.add(CremaBatida);
+		opcionesPanel3.add(ChispasChocolate);
+		opcionesPanel3.add(CremaChispas);
+		opcionesPanel3.add(Ninguna);
+		Ninguna.setSelected(true);
+		CremaBatida.addActionListener(this);
+		ChispasChocolate.addActionListener(this);
+		CremaChispas.addActionListener(this);
+		Ninguna.addActionListener(this);
+
+		opcionesPanel2.setVisible(false);
+		opcionesPanel3.setVisible(false);
+		
+		opcionesPanel4 = crearSubPanel("");
+		panelCS.add(opcionesPanel4);
+		JLabel lblpago = new JLabel("PAGO");
+		pago = new JTextField();
+		pago.setPreferredSize(new Dimension(80,20));
+		pagar = new JButton("Pagar");
+		pagar.setPreferredSize(new Dimension(150,20));
+		opcionesPanel4.add(lblpago);
+		opcionesPanel4.add(pago);
+		opcionesPanel4.add(pagar);
+		pagar.addActionListener((this));
+		pago.addActionListener((this));
+		
 		
 	}
 	@Override
-	public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(ActionEvent e) {
 
-    	Object origen = event.getSource(); 
-		String compra; 
+		Object origen = e.getSource(); 
+		String compra = "", identificador_secundario = ""; 
+		String[] compraLista = new String[2]; 
+		String[] compraSubFrag = new String[4];
+		String[] compraFrag;
+		char A = '0';
+		char B = '0';
 		int identificador_inicial = 0;
-		 
-		if(origen == botonAme){
-			identificador_inicial=10;
-		}else if(origen == botonExp){
-			identificador_inicial=20;
-		}else if(origen == botonCap){
-			identificador_inicial=30;
-		}else if(origen == botonMok){
-			identificador_inicial=40;
-		}else if(origen == botonLat){
-			identificador_inicial=50;
-		}else if(origen == botonSan){
-			identificador_inicial=01;
-		}else if(origen == botonPan){
-			identificador_inicial=02;
-		}else if(origen == botonDon){
-			identificador_inicial=03;
-		}else if(origen == botonHel){
-			identificador_inicial=04;
+		float CantidadPago;
+		do{
+			if(origen == botonAme){
+				identificador_inicial=10;
+			}else if(origen == botonExp){
+				identificador_inicial=20;
+			}else if(origen == botonCap){
+				identificador_inicial=30;
+			}else if(origen == botonMok){
+				identificador_inicial=40;
+			}else if(origen == botonLat){
+				identificador_inicial=50;
+			}else if(origen == botonSan){
+				compra = "01";
+			}else if(origen == botonPan){
+				compra = "02";
+			}else if(origen == botonDon){
+				compra = "03";
+			}else if(origen == botonHel){
+				compra = "04";
+			}
+
+			if(identificador_inicial>20){
+				opcionesPanel2.setVisible(true);
+				opcionesPanel3.setVisible(true);
+				if(LecheEntera.isSelected()){
+					A='1';
+				}else if(LecheDeslactosada.isSelected()){
+					A='2';
+				}else if(LecheLight.isSelected()){
+					A='3';
+				}
+				if(CremaBatida.isSelected()){
+					B='1';
+				}else if(ChispasChocolate.isSelected()){
+					B='2';
+				}else if(CremaChispas.isSelected()){
+					B='3';
+				}else if(Ninguna.isSelected()){
+					B='0';
+				}
+			}
+			else{
+				opcionesPanel2.setVisible(false);
+				opcionesPanel3.setVisible(false);		
+			}
+			identificador_secundario=""+A+B;
+			if(identificador_inicial>0){
+				compra = Integer.toString(identificador_inicial);
+			}
+			compra = compra + identificador_secundario;
+			int i = 0;
+			i++;
+			if(i==1){
+				compraLista[0]=compra;
+			}else{
+				compraLista[1]=compra;
+				compraLista[0]=""+compraLista[0]+compra;
+				compraLista[1]=null;
+			}
+		}while(origen!=pagar);
+		//Validación 
+		if(origen == pagar){
+			if(isNumeric(pago.getText())){
+				//cálculos
+				CantidadPago = Float.parseFloat(pago.getText());
+				int tamañoF = (int) Math.ceil((double) compraLista[0].length() / 4);
+				compraFrag=dividirCadena(compraLista[0], tamañoF );
+				for(int i = 0; i < tamañoF; i++){
+					for(int j = 0; j < 4; j++){
+						compraSubFrag=dividirCadena(compraFrag[i],4);
+					}
+				}
+				
+			}
 		}
-
-		if(identificador_inicial>20){
-			bgOpcionesLeche = new ButtonGroup("Leche");
-			LecheEntera = new JRadioButton("Leche entera");
-			LecheLight = new JRadioButton("Leche light"); 
-			LecheDeslactosada = new JRadioButton("Leche deslactosada");
-			bgOpcionesLeche.add(LecheEntera); 
-			bgOpcionesLeche.add(LecheLight); 
-			bgOpcionesLeche.add(LecheDeslactosada); 
-			opcionesPanel.add(bgOpcionesLeche);
-			bgOpcionesExtra = new ButtonGroup("Extras");
-			CremaBatida = new JRadioButton("Crema batida");
-			ChispasChocolate = new JRadioButton("Chispas de chocolate");
-			CremaChispas = new JRadioButton("Ambas");
-			bgOpcionesExtra.add(CremaBatida);
-			bgOpcionesExtra.add(ChispasChocolate);
-			bgOpcionesExtra.add(CremaChispas);	
-			opcionesPanel.add(bgOpcionesExtra);
-		
-		}
-
-
 		
 	}
-	
+	public static boolean isNumeric(String str)
+	{
+		/* El try -catch es un bloque para detectar y controlar una excepción 
+		   generada por código en funcionamiento*/
+		try{
+			double d= Double.parseDouble(str);
+			if (d<=0){
+				JOptionPane.showMessageDialog(null,"El valor es negativo");
+				return false;
+			}
+		}
+		catch (NumberFormatException nfe){
+			JOptionPane.showMessageDialog(null,  "El valor no es numérico");
+			return false;
+		}
+		//JOptionPane.showMessageDialog(null, "ES CORRECTO COMO FUE CAPTURADO EL VALOR ");
+		return true;
+
+	}
+	public String[] dividirCadena(String cadena, int tamanoFragmento) {
+        // Verificar si el tamaño del fragmento es válido
+        if (tamanoFragmento <= 0) {
+            System.out.println("El tamaño del fragmento debe ser mayor que cero.");
+			return null;
+        }
+
+         // Calcular la cantidad de fragmentos
+		 int cantidadFragmentos = (int) Math.ceil((double) cadena.length() / tamanoFragmento);
+
+		 // Crear un arreglo para almacenar los fragmentos
+		 String[] fragmentos = new String[cantidadFragmentos];
+ 
+		 // Bucle para recorrer la cadena y almacenar los fragmentos en el arreglo
+		 for (int i = 0; i < cadena.length(); i += tamanoFragmento) {
+			 // Calcular el índice final del fragmento
+			 int endIndex = Math.min(i + tamanoFragmento, cadena.length());
+ 
+			 // Obtener el fragmento de la cadena
+			 String fragmento = cadena.substring(i, endIndex);
+ 
+			 // Almacenar el fragmento en el arreglo
+			 fragmentos[i / tamanoFragmento] = fragmento;
+		 }
+ 
+		 // Devolver el arreglo de fragmentos
+		 return fragmentos;
+	 }
     public static void main(String[] args) {
         PrCafe marco = new PrCafe ();
         marco.crearGUI();
@@ -199,5 +345,4 @@ public class PrCafe extends JFrame implements ActionListener{
         marco.setVisible(true);
         
     }
-
 }
