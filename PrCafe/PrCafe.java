@@ -23,14 +23,14 @@ public class PrCafe extends JFrame implements ActionListener{
 	JPanel panelST = crearPanel(café3, 0, 80, 1500, 50, 0);
 	JPanel panelP = crearPanel(café1, 0, 130, 750, 750, 0);
 	JPanel panelC = crearPanel(café2, 750, 130, 750, 500, 0);
-	JPanel panelCS = crearPanel(café3, 750,630, 750, 65, 0);
+	JPanel panelCS = crearPanel(café3, 750,630, 750, 65, 1);
 
 	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel;
 
-	private JPanel crearPanel(Color color, int x, int y, int width, int height, int g) {
+	private JPanel crearPanel(Color color, int x, int y, int width, int height, int modificador) {
 		JPanel panel = new JPanel(new FlowLayout());
-        if(g==1){
-			panel = new JPanel(new GridLayout(4,4));
+        if(modificador==1){
+			panel = new JPanel(new GridLayout(1,2));
 		}
         panel.setBackground(color);
         panel.setBounds(x, y, width, height);
@@ -57,11 +57,7 @@ public class PrCafe extends JFrame implements ActionListener{
 		ventana.add(panelP);
 		ventana.add(panelC);
 		ventana.add(panelCS);
-		//panelC.add(scrollPane);
 		
-		
-
-		//prueba con botones
 		botonAme = new JButton("Americano"); 
 		botonAme.setPreferredSize(new Dimension(150,20));
 		JPanel panelPSubAme = crearSubPanel("imgAme.jpg");
@@ -118,28 +114,36 @@ public class PrCafe extends JFrame implements ActionListener{
 		panelP.add(panelPSubHel);
 		botonHel.addActionListener(this);
 
+		
+
 	}
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
     	Object origen = event.getSource(); 
+		String compra; 
+		int identificador_inicial = 0;
+		 
 		if(origen == botonAme){
-
-		}else if(origen == botonCap){
-
+			identificador_inicial=10;
 		}else if(origen == botonExp){
-
+			identificador_inicial=20;
+		}else if(origen == botonCap){
+			identificador_inicial=30;
 		}else if(origen == botonMok){
-
+			identificador_inicial=40;
 		}else if(origen == botonLat){
-
+			identificador_inicial=50;
 		}else if(origen == botonSan){
-
+			identificador_inicial=01;
 		}else if(origen == botonPan){
-
+			identificador_inicial=02;
 		}else if(origen == botonDon){
-
+			identificador_inicial=03;
 		}else if(origen == botonHel){
+			identificador_inicial=04;
+		}
+		if(identificador_inicial>20){
 
 		}
 				
