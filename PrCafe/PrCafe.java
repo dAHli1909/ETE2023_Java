@@ -155,7 +155,6 @@ public class PrCafe extends JFrame implements ActionListener{
 		opcionesPanel2.add(LecheEntera);
 		opcionesPanel2.add(LecheLight);
 		opcionesPanel2.add(LecheDeslactosada);
-		LecheEntera.setSelected(true);
 		LecheEntera.addActionListener(this);
 		LecheDeslactosada.addActionListener(this);
 		LecheLight.addActionListener(this);
@@ -212,8 +211,8 @@ public class PrCafe extends JFrame implements ActionListener{
 		char A = '0';
 		char B = '0';
 		int identificador_inicial = 0;
-		float CantidadPago;
-		do{
+		float CantidadPago = 0,/*ya funciona*/  Precio = 0;
+		if(origen!=pagar){
 			if(origen == botonAme){
 				identificador_inicial=10;
 			}else if(origen == botonExp){
@@ -235,6 +234,7 @@ public class PrCafe extends JFrame implements ActionListener{
 			}
 
 			if(identificador_inicial>20){
+				LecheEntera.setSelected(true);
 				opcionesPanel2.setVisible(true);
 				opcionesPanel3.setVisible(true);
 				if(LecheEntera.isSelected()){
@@ -243,6 +243,8 @@ public class PrCafe extends JFrame implements ActionListener{
 					A='2';
 				}else if(LecheLight.isSelected()){
 					A='3';
+				}else{
+					A='0';
 				}
 				if(CremaBatida.isSelected()){
 					B='1';
@@ -265,16 +267,18 @@ public class PrCafe extends JFrame implements ActionListener{
 			compra = compra + identificador_secundario;
 			int i = 0;
 			i++;
+			JOptionPane.showMessageDialog(null,"Botón pagar");
 			if(i==1){
 				compraLista[0]=compra;
 			}else{
 				compraLista[1]=compra;
-				compraLista[0]=""+compraLista[0]+compra;
+				compraLista[0]=compraLista[0]+compra;
 				compraLista[1]=null;
 			}
-		}while(origen!=pagar);
+		}
 		//Validación 
-		if(origen == pagar){
+		else if(origen == pagar){
+			JOptionPane.showMessageDialog(null,"Botón pagar");
 			if(isNumeric(pago.getText())){
 				//cálculos
 				CantidadPago = Float.parseFloat(pago.getText());
@@ -283,12 +287,48 @@ public class PrCafe extends JFrame implements ActionListener{
 				for(int i = 0; i < tamañoF; i++){
 					for(int j = 0; j < 4; j++){
 						compraSubFrag=dividirCadena(compraFrag[i],4);
+						if(compraSubFrag[0]=="1"){
+							Precio+=35;
+						}else if(compraSubFrag[0]=="2"){
+							Precio+=60;
+						}else if(compraSubFrag[0]=="3"){
+							Precio+=70;
+						}else if(compraSubFrag[0]=="4"){
+							Precio+=90;
+						}else if(compraSubFrag[0]=="5"){
+							Precio+=90;
+						}
+						if(compraSubFrag[1]=="1"){
+							Precio+=100;
+						}else if(compraSubFrag[1]=="2"){
+							Precio+=40;
+						}else if(compraSubFrag[1]=="3"){
+							Precio+=30;
+						}else if(compraSubFrag[1]=="4"){
+							Precio+=120;
+						}
+						if(compraSubFrag[2]=="1"){
+							Precio+=0;
+						}else if(compraSubFrag[2]=="2"){
+							Precio+=10;
+						}else if(compraSubFrag[2]=="3"){
+							Precio+=12;
+						}else if(compraSubFrag[2]=="0"){
+							Precio+=0;
+						}
+						if(compraSubFrag[3]=="1"){
+							Precio+=7;
+						}else if(compraSubFrag[3]=="2"){
+							Precio+=5;
+						}else if(compraSubFrag[3]=="3"){
+							Precio+=12;
+						}else if(compraSubFrag[3]=="0"){
+							Precio+=0;
+						}
 					}
 				}
-				
 			}
 		}
-		
 	}
 	public static boolean isNumeric(String str)
 	{
