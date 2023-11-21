@@ -9,16 +9,19 @@ package ETE2023_Java.PrCafe;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.concurrent.*;
+import java.util.*;
 
 public class PrCafe extends JFrame implements ActionListener{
 
-	//rivate ImageIcon imgAme, imgExp, imgCap, imgMok;
+	//colores
 	Color café1 = new Color (0x855F1B);
 	Color café2 = new Color (0x99793D);
 	Color café3 = new Color (0x664914);
 	Color café4 = new Color (0x382400);
 	Color negro = new Color (0x000000);
 
+	//paneles
 	JPanel panelT = crearPanel(café4,0,0,1380,80,0);
 	JPanel panelST1 = crearPanel(café3, 0, 80, 690, 50, 0);
 	JPanel panelST2 = crearPanel(café3, 690, 80, 690, 50, 0);
@@ -27,6 +30,7 @@ public class PrCafe extends JFrame implements ActionListener{
 	JPanel panelCS = crearPanel(café3, 690,530, 690, 165, 0);
 	JPanel opcionesPanel1, opcionesPanel2, opcionesPanel3, opcionesPanel4;
 
+	//interfaz gráfica; 
 	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel, pagar;
 	JButton botonAdelante = new JButton("Adelante");
 	JButton botonAtras = new JButton("Atrás");
@@ -35,10 +39,11 @@ public class PrCafe extends JFrame implements ActionListener{
     private JRadioButton LecheEntera, LecheLight, LecheDeslactosada, CremaBatida, ChispasChocolate, CremaChispas, Ninguna;
 	JTextField pago;
 
+	//variables posteriormente acumulativas;
 	int contador = 0;
 	String[] compraLista = new String[2]; 
 	String[] compraFrag;
-	float CantidadPago = 0,/*ya funciona*/  Precio = 0;
+	
 
 	private JPanel crearPanel(Color color, int x, int y, int width, int height, int modificador) {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -214,6 +219,19 @@ public class PrCafe extends JFrame implements ActionListener{
 		char A = '0';
 		char B = '0';
 		int identificador_inicial = 0;
+		CountDownLatch latch = new CountDownLatch(1);
+		Thread Select;
+
+		class Select implements Runnable {
+			private String nombre;
+			private CountDownLatch latch;
+			public Select(String nombre, CountDownLatch latch) {
+				this.nombre = nombre;
+				this.latch = latch;
+			}
+		}
+
+
 		if(origen!=pagar){
 			if(origen == botonAme){
 				identificador_inicial=10;
@@ -236,28 +254,42 @@ public class PrCafe extends JFrame implements ActionListener{
 			}
 
 			if(identificador_inicial>20){
-				//LecheEntera.setSelected(true);
+				LecheEntera.setSelected(true);
 				opcionesPanel2.setVisible(true);
 				opcionesPanel3.setVisible(true);
+				// Select = new Thread(new Select("Selección del tipo de leche", latch));
+				// Select.start();
+				// try{
+				// 	latch.await();
+				// }catch(InterruptedException IE){
+				// 	IE.printStackTrace();
+				// }
+				// botonSi.addEventListener("click", function() {
+				// 	// Coloca aquí el código que quieres que se ejecute cuando se hace clic en el botón "Sí"
+				// 	alert("¡Has hecho clic en Sí!");
+				// });
 				
-				if(LecheEntera.isSelected()){
+				
+					if(LecheEntera.isSelected()){
 					A='1';
-				}else if(LecheDeslactosada.isSelected()){
-					A='2';
-				}else if(LecheLight.isSelected()){
-					A='3';
-				}else{
-					A='0';
-				}
-				if(CremaBatida.isSelected()){
-					B='1';
-				}else if(ChispasChocolate.isSelected()){
-					B='2';
-				}else if(CremaChispas.isSelected()){
-					B='3';
-				}else if(Ninguna.isSelected()){
-					B='0';
-				}
+					}else if(LecheDeslactosada.isSelected()){
+						A='2';
+					}else if(LecheLight.isSelected()){
+						A='3';
+					}else{
+						A='0';
+					}
+					if(CremaBatida.isSelected()){
+						B='1';
+					}else if(ChispasChocolate.isSelected()){
+						B='2';
+					}else if(CremaChispas.isSelected()){
+						B='3';
+					}else if(Ninguna.isSelected()){
+						B='0';
+					}
+				
+				
 			}
 			else{
 				opcionesPanel2.setVisible(false);
@@ -268,71 +300,107 @@ public class PrCafe extends JFrame implements ActionListener{
 				compra = Integer.toString(identificador_inicial);
 			}
 			compra = compra + identificador_secundario;
-			JOptionPane.showMessageDialog(null,"Unión de compra e identificador secundario: " + compra);
+			//JOptionPane.showMessageDialog(null,"Unión de compra e identificador secundario: " + compra);
 			contador++;
 			if(contador==1){
 				compraLista[0]=compra;
-				JOptionPane.showMessageDialog(null,"CompraLista1 "+compra);
+				//JOptionPane.showMessageDialog(null,"CompraLista1 "+compra);
 			}else{
 				compraLista[1]=compra;
 				compraLista[0]=compraLista[0]+compra;
 				compraLista[1]=null;
-				JOptionPane.showMessageDialog(null,"CompraLista2 o más " + compraLista[0]);
+				//JOptionPane.showMessageDialog(null,"CompraLista2 o más " + compraLista[0]);
 			}
 		}
 		//Validación 
 		else if(origen == pagar){
-			JOptionPane.showMessageDialog(null,"Botón pagar");
 			if(isNumeric(pago.getText())){
 				//cálculos
-				CantidadPago = Float.parseFloat(pago.getText());
-				int tamañoF = (int) Math.ceil((double) compraLista[0].length() / 4);
-				compraFrag=dividirCadena(compraLista[0], tamañoF );
-				for(int i = 0; i < tamañoF; i++){
-					for(int j = 0; j < 4; j++){
-						compraSubFrag=dividirCadena(compraFrag[i],4);
-						if(compraSubFrag[0].equals("1")){
-							Precio+=35;
-						}else if(compraSubFrag[0].equals("2")){
-							Precio+=60;
-						}else if(compraSubFrag[0].equals("3")){
-							Precio+=70;
-						}else if(compraSubFrag[0].equals("4")){
-							Precio+=90;
-						}else if(compraSubFrag[0].equals("5")){
-							Precio+=90;
-						}
-						if(compraSubFrag[1].equals("1")){
-							Precio+=100;
-						}else if(compraSubFrag[1].equals("2")){
-							Precio+=40;
-						}else if(compraSubFrag[1].equals("3")){
-							Precio+=30;
-						}else if(compraSubFrag[1].equals("4")){
-							Precio+=120;
-						}
-						if(compraSubFrag[2].equals("1")){
-							Precio+=0;
-						}else if(compraSubFrag[2].equals("2")){
-							Precio+=10;
-						}else if(compraSubFrag[2].equals("3")){
-							Precio+=12;
-						}else if(compraSubFrag[2].equals("0")){
-							Precio+=0;
-						}
-						if(compraSubFrag[3].equals("1")){
-							Precio+=7;
-						}else if(compraSubFrag[3].equals("2")){
-							Precio+=5;
-						}else if(compraSubFrag[3].equals("3")){
-							Precio+=12;
-						}else if(compraSubFrag[3].equals("0")){
-							Precio+=0;
+				float Precio = 0;
+				float CantidadPago = Float.parseFloat(pago.getText());
+				JOptionPane.showMessageDialog(null,"Cantidad a pagar:(float->string)" + String.valueOf(CantidadPago));
+
+				int cantidadFragmentosG = (int) Math.ceil((double) compraLista[0].length() / 4);
+				JOptionPane.showMessageDialog(null,"CantidadFragmentosG:" + String.valueOf(cantidadFragmentosG));
+
+				compraFrag=dividirCadena(compraLista[0], 4 );
+				JOptionPane.showMessageDialog(null,"comprafrag:" + Arrays.toString(compraFrag));
+
+				for(int i = 1; i <= cantidadFragmentosG; i++){
+					compraSubFrag=dividirCadena(compraFrag[i-1],1);
+					if(compraSubFrag[0].equals("1")){//americano
+						Precio+=35;
+					}else if(compraSubFrag[0].equals("2")){//exprés
+						Precio+=60;
+					}else if(compraSubFrag[0].equals("3")){//capuchino
+						Precio+=70;
+					}else if(compraSubFrag[0].equals("4")){//moka
+						Precio+=90;
+					}else if(compraSubFrag[0].equals("5")){//latte
+						Precio+=90;
+					}
+					if(compraSubFrag[1].equals("1")){//sándwich
+						Precio+=100;
+					}else if(compraSubFrag[1].equals("2")){//panqué
+						Precio+=40;
+					}else if(compraSubFrag[1].equals("3")){//dona
+						Precio+=30;
+					}else if(compraSubFrag[1].equals("4")){//helado
+						Precio+=120;
+					}
+					if(compraSubFrag[2].equals("1") || compraSubFrag[2].equals("0")){//entera o ninguna
+						Precio+=0;
+					}else if(compraSubFrag[2].equals("2")){//deslactosada
+						Precio+=6;
+					}else if(compraSubFrag[2].equals("3")){//light
+						Precio+=8;
+					}
+					if(compraSubFrag[3].equals("1")){//chispas
+						Precio+=7;
+					}else if(compraSubFrag[3].equals("2")){//cremita
+						Precio+=5;
+					}else if(compraSubFrag[3].equals("3")){//ambas
+						Precio+=12;
+					}else if(compraSubFrag[3].equals("0")){//nignuna
+						Precio+=0;
+					}
+					JOptionPane.showMessageDialog(null,"CicloA: " +  String.valueOf(i) + ", CicloB: " + " compraSubFrag:" + Arrays.toString(compraSubFrag) + " Precio: " + String.valueOf(Precio));
+				}
+				if(Precio <= CantidadPago){
+					int[] billetes = {0,0,0,0,0,0,0,0,0};
+					CantidadPago-=Precio;//acá se vuelve en realidad el cambio
+					while(CantidadPago>0){
+						if(CantidadPago>=500){
+							CantidadPago = Cambio(billetes, 0, 500, CantidadPago);
+						}else if(CantidadPago>=200){
+							CantidadPago = Cambio(billetes, 1, 200, CantidadPago);
+						}else if(CantidadPago>=100){
+							CantidadPago = Cambio(billetes, 2, 100, CantidadPago);
+						}else if(CantidadPago>=50){
+							CantidadPago = Cambio(billetes, 3, 50, CantidadPago);
+						}else if(CantidadPago>=20){
+							CantidadPago = Cambio(billetes, 4, 20, CantidadPago);
+						}else if(CantidadPago>=10){
+							CantidadPago = Cambio(billetes, 5, 10, CantidadPago);
+						}else if(CantidadPago>=5){
+							CantidadPago = Cambio(billetes, 6, 5, CantidadPago);
+						}else if(CantidadPago>=2){
+							CantidadPago = Cambio(billetes, 7, 2, CantidadPago);
+						}else if(CantidadPago>=1){
+							CantidadPago = Cambio(billetes, 8, 1, CantidadPago);
 						}
 					}
-				}
+					JOptionPane.showMessageDialog(null, "Billetes: 	" + Arrays.toString(billetes));
+				}else{
+					JOptionPane.showMessageDialog(null,"Pago insuficiente");
+				}	
 			}
 		}
+	}
+	static float Cambio(int[] arrayP, int i, int n, float P){
+		arrayP[i] = (int) Math.floor((double) P / n);
+		P-=arrayP[i]*n;
+		return P;
 	}
 	public static boolean isNumeric(String str)
 	{
@@ -341,44 +409,28 @@ public class PrCafe extends JFrame implements ActionListener{
 		try{
 			double d= Double.parseDouble(str);
 			if (d<=0){
-				JOptionPane.showMessageDialog(null,"El valor es negativo");
+				JOptionPane.showMessageDialog(null,"Pago inválido");
 				return false;
 			}
 		}
 		catch (NumberFormatException nfe){
-			JOptionPane.showMessageDialog(null,  "El valor no es numérico");
+			JOptionPane.showMessageDialog(null,  "Introduzca un valor válido");
 			return false;
 		}
-		//JOptionPane.showMessageDialog(null, "ES CORRECTO COMO FUE CAPTURADO EL VALOR ");
 		return true;
-
 	}
-	public String[] dividirCadena(String cadena, int tamanoFragmento) {
-        // Verificar si el tamaño del fragmento es válido
-        if (tamanoFragmento <= 0) {
+	public String[] dividirCadena(String cadena, int tamañoFragmento) {
+        if (tamañoFragmento <= 0) {
             System.out.println("El tamaño del fragmento debe ser mayor que cero.");
 			return null;
         }
-
-         // Calcular la cantidad de fragmentos
-		 int cantidadFragmentos = (int) Math.ceil((double) cadena.length() / tamanoFragmento);
-
-		 // Crear un arreglo para almacenar los fragmentos
+		 int cantidadFragmentos = (int) Math.ceil((double) cadena.length() / tamañoFragmento);
 		 String[] fragmentos = new String[cantidadFragmentos];
- 
-		 // Bucle para recorrer la cadena y almacenar los fragmentos en el arreglo
-		 for (int i = 0; i < cadena.length(); i += tamanoFragmento) {
-			 // Calcular el índice final del fragmento
-			 int endIndex = Math.min(i + tamanoFragmento, cadena.length());
- 
-			 // Obtener el fragmento de la cadena
+		 for (int i = 0; i < cadena.length(); i += tamañoFragmento){
+			 int endIndex = Math.min(i + tamañoFragmento, cadena.length());
 			 String fragmento = cadena.substring(i, endIndex);
- 
-			 // Almacenar el fragmento en el arreglo
-			 fragmentos[i / tamanoFragmento] = fragmento;
+			 fragmentos[i / tamañoFragmento] = fragmento;
 		 }
- 
-		 // Devolver el arreglo de fragmentos
 		 return fragmentos;
 	 }
     public static void main(String[] args) {
@@ -387,6 +439,5 @@ public class PrCafe extends JFrame implements ActionListener{
         marco.setTitle("Cafetería");
 		marco.setSize(1500,900);
         marco.setVisible(true);
-        
     }
 }
