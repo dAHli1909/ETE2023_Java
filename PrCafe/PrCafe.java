@@ -37,7 +37,7 @@ public class PrCafe extends JFrame implements ActionListener{
 	JPanel opcionesPanel1, opcionesPanel2, opcionesPanel3, opcionesPanel4;
 
 	//interfaz gráfica; 
-	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel, pagar, botonAdelante, botonAtras, botonBorrar;
+	private JButton botonAme, botonExp, botonCap, botonMok, botonLat, botonSan, botonDon, botonPan, botonHel, pagar, botonAgregar, botonBorrar;
 	private ButtonGroup bgOpcionesLeche, bgOpcionesExtra;
     private JRadioButton LecheEntera, LecheLight, LecheDeslactosada, CremaBatida, ChispasChocolate, CremaChispas, Ninguna;
 	JTextField pago;
@@ -156,17 +156,15 @@ public class PrCafe extends JFrame implements ActionListener{
 
 		opcionesPanel1 = crearSubPanel("",200,180, 170,120);
 		panelCS.add(opcionesPanel1);
-		botonAdelante = new JButton("Adelante");
-		botonAtras = new JButton("Atrás");
+		botonAgregar = new JButton("Agregar");
 		botonBorrar = new JButton("Borrar");
 		JLabel lblopciones = new JLabel("Opciones:");
 		opcionesPanel1.add(lblopciones);
-		opcionesPanel1.add(botonAdelante);
-		opcionesPanel1.add(botonAtras);
+		opcionesPanel1.add(botonAgregar);
+		botonAgregar.setVisible(false);
 		opcionesPanel1.add(botonBorrar);
-		botonAdelante.addActionListener((this));
 		botonBorrar.addActionListener((this));
-		botonAtras.addActionListener((this));
+		
 
 		opcionesPanel2 = crearSubPanel("", 200,180, 170,120);
 		panelCS.add(opcionesPanel2);
@@ -204,10 +202,10 @@ public class PrCafe extends JFrame implements ActionListener{
 		opcionesPanel3.add(CremaChispas);
 		opcionesPanel3.add(Ninguna);
 		Ninguna.setSelected(true);
-		CremaBatida.addActionListener((this));
-		ChispasChocolate.addActionListener((this));
-		CremaChispas.addActionListener((this));
-		Ninguna.addActionListener((this));
+		// CremaBatida.addActionListener((this));
+		// ChispasChocolate.addActionListener((this));
+		// CremaChispas.addActionListener((this));
+		// Ninguna.addActionListener((this));
 
 		opcionesPanel2.setVisible(false);
 		opcionesPanel3.setVisible(false);
@@ -280,36 +278,51 @@ public class PrCafe extends JFrame implements ActionListener{
 			if(identificador_inicial>20){
 				LecheEntera.setSelected(true);
 				Ninguna.setSelected(true);
+				
 				opcionesPanel2.setVisible(true);
 				opcionesPanel3.setVisible(true);
-				// Thread t=Thread.currentThread();
-				// t.interrupt();
-				
-				if(LecheEntera.isSelected()){
-					A='1';
-				}else if(LecheDeslactosada.isSelected()){
-					A='2';
-				}else if(LecheLight.isSelected()){
-					A='3';
-				}else{
-					A='0';
-				}
-				if(CremaBatida.isSelected()){
-					B='1';
-				}else if(ChispasChocolate.isSelected()){
-					B='2';
-				}else if(CremaChispas.isSelected()){
-					B='3';
-				}else if(Ninguna.isSelected()){
-					B='0';
-				}
+				botonAgregar.setVisible(true);
+				// botonAgregar.addActionListener((this));
+				final ExecutorService executorService = Executors.newFixedThreadPool(2);
+				executorService.execute(() -> {
+					botonAgregar.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// Lógica para salir del ExecutorService
+							opcionesPanel2.setVisible(false);
+							opcionesPanel3.setVisible(false);		
+							botonAgregar.setVisible(false);
+							//JOptionPane.showMessageDialog(null, "Se ha salido del ExecutorService");
+							if(LecheEntera.isSelected()){
+								A='1';
+								PrecioI+=0;
+							}else if(LecheDeslactosada.isSelected()){
+								PrecioI+=6;
+								A='2';
+							}else if(LecheLight.isSelected()){
+								PrecioI+=8;
+								A='3';
+							}else{
+								A='0';
+							}
+							if(CremaBatida.isSelected()){
+								PrecioI+=7;
+								B='1';
+							}else if(ChispasChocolate.isSelected()){
+								PrecioI+=5;
+								B='2';
+							}else if(CremaChispas.isSelected()){
+								PrecioI+=12;
+								B='3';
+							}else if(Ninguna.isSelected()){
+								B='0';
+							}
+							
+							executorService.shutdown();
+						}
+					});
+				});
 			}
-			else{
-				opcionesPanel2.setVisible(false);
-				opcionesPanel3.setVisible(false);		
-			}
-			
-
 			identificador_secundario=""+A+B;
 			if(identificador_inicial>0){
 				compra = Integer.toString(identificador_inicial);
@@ -408,32 +421,35 @@ public class PrCafe extends JFrame implements ActionListener{
 						}
 					}
 					panelC.removeAll();
+					
+					//JOptionPane.showMessageDialog(null, "Billetes: 	" + Arrays.toString(billetes));
+					//JOptionPane.showMessageDialog(null, "Compra finalizada");					
+					//JOptionPane.showMessageDialog(null, "billete"+String.valueOf(billete));	
+					
+					// muestraBilletes(billetes[0], "500.jpg");
+					// muestraBilletes(billetes[1], "200.jpg");
+					// muestraBilletes(billetes[3], "50.jpg");
+					// muestraBilletes(billetes[4], "20.jpg");
+					// muestraBilletes(billetes[5], "10.png");
+					// muestraBilletes(billetes[6], "5.png");
+					// muestraBilletes(billetes[7], "2.png");
+					// muestraBilletes(billetes[8], "1.png");
+					
+					JLabel[] denomina = new JLabel[9]; 
+					denomina[0] = new JLabel("Billetes de 500: " + String.valueOf(billetes[0]));
+					denomina[1] = new JLabel("Billetes de 200: " + String.valueOf(billetes[1]));
+					denomina[2] = new JLabel("Billetes de 100: " + String.valueOf(billetes[2]));
+					denomina[3] = new JLabel("Billetes de 50: " + String.valueOf(billetes[3]));
+					denomina[4] = new JLabel("Billetes de 20: " + String.valueOf(billetes[4]));
+					denomina[5] = new JLabel("Monedas de 10: " + String.valueOf(billetes[5]));
+					denomina[6] = new JLabel("Monedas de 5: " + String.valueOf(billetes[6]));
+					denomina[7] = new JLabel("Monedas de 2: " + String.valueOf(billetes[7]));
+					denomina[8] = new JLabel("Monedas de 1: " + String.valueOf(billetes[8]));
+					for(int j = 0; j<8; j++){
+						panelC.add(denomina[j]);
+					}
 					revalidate();
         			repaint();
-					JOptionPane.showMessageDialog(null, "Billetes: 	" + Arrays.toString(billetes));
-					//JOptionPane.showMessageDialog(null, "Compra finalizada");					
-					for(int billete : billetes){
-						if(billete==billetes[0]){
-							muestraBilletes(billete, "500.jpg");
-						}else if(billete==billetes[1]){
-							muestraBilletes(billete, "200.jpg");
-						}else if(billete==billetes[2]){
-							muestraBilletes(billete, "100.jpg");
-						}else if(billete==billetes[3]){
-							muestraBilletes(billete, "50.jpg");
-						}else if(billete==billetes[4]){
-							muestraBilletes(billete, "20.jpg");
-						}else if(billete==billetes[5]){
-							muestraBilletes(billete, "10.png");
-						}else if(billete==billetes[6]){
-							muestraBilletes(billete, "5.png");
-						}else if(billete==billetes[7]){
-							muestraBilletes(billete, "2.png");
-						}else if(billete==billetes[8]){
-							muestraBilletes(billete, "1.png");
-						}
-						
-					}
 				}else{
 					JOptionPane.showMessageDialog(null,"Pago insuficiente");
 				}	
@@ -451,18 +467,23 @@ public class PrCafe extends JFrame implements ActionListener{
 		}
 	}
 	private void muestraBilletes(int billete, String archivo){
+		
 		while(billete>0){
-			agregarNuevoPanel(archivo, "",50,40);
 			billete--;
+			agregarNuevoPanel(archivo, null,110,60);
+			// revalidate();
+			// repaint();
 		}
 	}
 	private void agregarNuevoPanel(String archivo, String muestraProducto, int wi, int hi) {
-        JPanel panelNuevo = crearSubPanel(archivo, 690,35,wi,hi);
+        JPanel panelNuevo = crearSubPanel(archivo, 110,110,wi,hi);
         panelNuevo.setBackground(null);
 		JLabel muestraProduct = new JLabel(muestraProducto);
-		panelNuevo.add(muestraProduct);
 		panelC.add(panelNuevo);
-		muestraPrecio.setText("Precio: " + String.valueOf(PrecioI));
+		if(muestraProducto!=null){
+			panelNuevo.add(muestraProduct); 
+			muestraPrecio.setText("Precio: " + String.valueOf(PrecioI));
+		}
         revalidate();
         repaint();
     }
